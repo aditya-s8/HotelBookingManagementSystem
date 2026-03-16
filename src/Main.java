@@ -1,89 +1,76 @@
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Hotel Booking Management System
+ * UC3 - Centralized Room Inventory using HashMap
  * <p>
- * Demonstrates object modeling using abstraction and inheritance.
- * Different room types extend a common abstract Room class.
+ * Demonstrates how HashMap can be used to maintain
+ * a single source of truth for room availability.
  *
  * @author Aditya Raj Singh
  * @version 1.0
  */
 
-// Abstract Room class
-abstract class Room {
+// RoomInventory class manages availability
+class RoomInventory {
 
-    protected String roomType;
-    protected int beds;
-    protected double price;
+    private final Map<String, Integer> inventory;
 
-    public Room(String roomType, int beds, double price) {
-        this.roomType = roomType;
-        this.beds = beds;
-        this.price = price;
+    // Constructor initializes inventory
+    public RoomInventory() {
+
+        inventory = new HashMap<>();
+
+        inventory.put("Single Room", 5);
+        inventory.put("Double Room", 3);
+        inventory.put("Suite Room", 2);
     }
 
-    public void displayRoomDetails() {
-        System.out.println("Room Type: " + roomType);
-        System.out.println("Beds: " + beds);
-        System.out.println("Price per night: $" + price);
+    // Get availability of a room type
+    public int getAvailability(String roomType) {
+        return inventory.getOrDefault(roomType, 0);
     }
-}
 
-// Single Room class
-class SingleRoom extends Room {
-
-    public SingleRoom() {
-        super("Single Room", 1, 100.0);
+    // Update availability
+    public void updateAvailability(String roomType, int newCount) {
+        inventory.put(roomType, newCount);
     }
-}
 
-// Double Room class
-class DoubleRoom extends Room {
+    // Display full inventory
+    public void displayInventory() {
 
-    public DoubleRoom() {
-        super("Double Room", 2, 180.0);
-    }
-}
+        System.out.println("\nCurrent Room Inventory:");
 
-// Suite Room class
-class SuiteRoom extends Room {
-
-    public SuiteRoom() {
-        super("Suite Room", 3, 350.0);
+        for (Map.Entry<String, Integer> entry : inventory.entrySet()) {
+            System.out.println(entry.getKey() + " -> " + entry.getValue() + " rooms available");
+        }
     }
 }
 
-// Main application class
+// Main application
 public class Main {
 
     public static void main(String[] args) {
 
         System.out.println("=================================");
-        System.out.println("   Hotel Booking Management System");
+        System.out.println(" Hotel Booking Management System");
         System.out.println("=================================");
 
-        // Create room objects (Polymorphism)
-        Room singleRoom = new SingleRoom();
-        Room doubleRoom = new DoubleRoom();
-        Room suiteRoom = new SuiteRoom();
+        // Initialize inventory
+        RoomInventory inventory = new RoomInventory();
 
-        // Static availability variables
-        int singleAvailable = 5;
-        int doubleAvailable = 3;
-        int suiteAvailable = 2;
+        // Display inventory
+        inventory.displayInventory();
 
-        // Display room information
-        System.out.println("\nSingle Room Details:");
-        singleRoom.displayRoomDetails();
-        System.out.println("Available Rooms: " + singleAvailable);
+        // Example: update availability
+        System.out.println("\nUpdating availability for Single Room...");
 
-        System.out.println("\nDouble Room Details:");
-        doubleRoom.displayRoomDetails();
-        System.out.println("Available Rooms: " + doubleAvailable);
+        inventory.updateAvailability("Single Room", 4);
 
-        System.out.println("\nSuite Room Details:");
-        suiteRoom.displayRoomDetails();
-        System.out.println("Available Rooms: " + suiteAvailable);
+        // Display updated inventory
+        inventory.displayInventory();
 
-        System.out.println("\nApplication terminated successfully.");
+        System.out.println("\nApplication terminated.");
     }
 }
